@@ -25,6 +25,7 @@ scheduling + fleet management** layer that ccc alone does not provide.
 
 ## Mục lục
 
+- [📖 Ebook hướng dẫn (PDF)](#-ebook-hướng-dẫn)
 - [Đây là gì](#đây-là-gì)
 - [Telegram Relay là gì?](#telegram-relay-là-gì)
 - [Điểm khác biệt: Multi + Bidirectional](#điểm-khác-biệt-multi--bidirectional)
@@ -35,6 +36,23 @@ scheduling + fleet management** layer that ccc alone does not provide.
 - [Cấu trúc repo](#cấu-trúc-repo)
 - [Credits & relationship to ccc](#credits--relationship-to-ccc)
 - [License](#license)
+
+---
+
+## 📖 Ebook hướng dẫn
+
+Cuốn **"Cẩm nang vận hành đội AI từ xa"** — hướng dẫn chi tiết từng bước cách
+dùng skill này, từ tạo bot Telegram đến vận hành một đội Claude tự chạy theo
+lịch và tự phục hồi.
+
+| Định dạng | File |
+|---|---|
+| 📕 PDF | [`ebook/huong-dan-claude-telegram-multi-relay.pdf`](./ebook/huong-dan-claude-telegram-multi-relay.pdf) |
+| 📝 Nguồn Markdown | [`ebook/huong-dan-claude-telegram-multi-relay.md`](./ebook/huong-dan-claude-telegram-multi-relay.md) |
+
+Mười chương + ba phụ lục: Telegram Relay là gì → kiến trúc → cài đặt → quản lý
+session → multi-topic/user/group → broadcast → lập lịch launchd → giám sát &
+self-heal → tích hợp AI Native Company → bảng 27 quy tắc + khắc phục sự cố.
 
 ---
 
