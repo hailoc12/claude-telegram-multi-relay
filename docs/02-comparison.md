@@ -16,65 +16,68 @@
 
 ## 1. Tích hợp native của Claude
 
-Anthropic cung cấp:
+Anthropic cho bạn mấy lựa chọn: claude.ai (chat trên web/app, không đụng codebase
+máy bạn, không chạy lệnh), Claude API (tự build mọi thứ từ đầu), Claude Code CLI
+(mạnh, nhưng phải ngồi trước terminal), Claude Code trên cloud hoặc IDE (vẫn là
+bạn-chỉ-định, không phải AI chủ động gọi bạn khi cần).
 
-- **claude.ai** — web/app chat. Không truy cập codebase máy bạn, không chạy lệnh.
-- **Claude API** — bạn tự build mọi thứ.
-- **Claude Code** (CLI) — mạnh, nhưng phải ngồi trước terminal.
-- **Claude Code trên cloud / IDE** — vẫn là bạn-chỉ-định, không phải "AI gọi
-  bạn khi cần".
+Không có native Telegram relay. Không cơ chế nào để Claude Code *tự* nhắn cho
+bạn trên điện thoại khi xong việc, hay để bạn điều khiển nó từ xa. Đó là khoảng
+trống mà các relay lấp.
 
-**Không có native Telegram relay.** Không có cơ chế nào để Claude Code *tự*
-nhắn cho bạn trên điện thoại khi nó xong việc, hay bạn điều khiển nó từ xa. Đây
-là khoảng trống mà các relay điền vào.
-
-## 2. ccc — Claude Code Companion (kidandcat/ccc)
+## 2. ccc, Claude Code Companion (kidandcat/ccc)
 
 Đây là **nền tảng (upstream)** mà repo này xây lên. Credits đầy đủ ở
 [README](../README.md#credits--relationship-to-ccc).
 
-- ✅ relay 2 chiều Claude ↔ Telegram, ổn định, dùng production.
-- ✅ OTP permission approval, file relay, `/new`, `/continue`, `/c`.
-- ❌ **Single-session per invocation**: bạn tự mở nhiều terminal, tự nhớ session
-  nào ở topic nào. Không có khái niệm "fleet".
-- ❌ Không lên lịch được. Không tự restart. Không broadcast.
+ccc làm tốt: relay hai chiều Claude và Telegram, ổn định, dùng production, có OTP
+permission approval, file relay, `/new`, `/continue`, `/c`.
 
-**Repo này = ccc (relay engine) + lớp orchestration multi + scheduling.**
+Nhưng ccc có giới hạn. **Single-session per invocation**: bạn tự mở nhiều
+terminal, tự nhớ session nào ở topic nào, không có khái niệm "fleet". Không lên
+lịch được. Không tự restart. Không broadcast.
+
+Nói ngắn gọn: **repo này bằng ccc (relay engine) cộng thêm lớp orchestration
+multi và scheduling.**
 
 ## 3. Các Telegram relay opensource khác
 
 | Project | Mô hình | Multi? | Scheduling? |
 |---|---|---|---|
-| [JessyTsui/Claude-Code-Remote](https://github.com/JessyTsui/Claude-Code-Remote) | Async task qua email/discord/telegram. Gửi task → nhận notify khi xong. | 1 session/task | ❌ |
+| [JessyTsui/Claude-Code-Remote](https://github.com/JessyTsui/Claude-Code-Remote) | Async task qua email/discord/telegram. Gửi task, nhận notify khi xong. | 1 session/task | ❌ |
 | [RichardAtCT/claude-code-telegram](https://github.com/RichardAtCT/claude-code-telegram) | Bot hội thoại trên codebase. | ❌ | ❌ |
 | [RemoteCode](https://kcisoul.github.io/remotecode/) | Điều khiển Claude từ Telegram, giữ session/history. | 1 session active | ❌ |
 | [Claudegram](https://claudegram.com/) | Telegram, streaming response. | ❌ | ❌ (SaaS) |
 | Claude Code Channels (plugin) | Telegram/Discord/iMessage vào 1 session đang chạy. | ❌ | ❌ |
 
-**Điểm chung của tất cả:** xử lý tốt bài toán *1 Claude ↔ 1 kênh chat*.
+Điểm chung của tất cả: giải bài toán *một Claude ứng với một kênh chat* khá tốt.
 
-**Khoảng trống mà repo này lấp:** *N Claude ↔ N topic ↔ N group*, kèm **lên lịch
-persistent** (launchd, sống qua reboot/sleep) và **quản lý fleet** (monitor,
-broadcast, auto-heal, audit). Không có project nào ở trên làm phần này.
+Khoảng trống repo này lấp: *N Claude ứng với N topic ứng với N group*, kèm lập
+lịch persistent (launchd, sống qua reboot và sleep) và quản lý fleet (monitor,
+broadcast, auto-heal, audit). Phần này chưa project nào ở trên làm.
 
-## Khi nào dùng gì?
+## Khi nào dùng gì
 
-- **Chỉ cần chat 1 Claude từ điện thoại** → dùng thẳng `ccc`. Đơn giản, đủ dùng.
-- **Cần nhiều kênh (email/discord)** → JessyTsui/Claude-Code-Remote.
-- **Muốn SaaS, không muốn host** → Claudegram.
-- **Muốn chạy đội AI nhiều session, mỗi session 1 topic, tự lên lịch, tự
-  self-heal, điều khiển từ điện thoại** → **repo này.**
+- Chỉ cần chat một Claude từ điện thoại: dùng thẳng [`ccc`](https://github.com/kidandcat/ccc).
+  Đơn giản, đủ.
+- Cần nhiều kênh (email, discord): JessyTsui/Claude-Code-Remote.
+- Muốn SaaS, không muốn host: Claudegram.
+- Muốn chạy đội AI nhiều session, mỗi session một topic, tự lên lịch, tự
+  self-heal, điều khiển từ điện thoại: **repo này.**
 
 ## Trade-off thành thật
 
-Repo này mạnh ở orchestration, nhưng:
+Repo này mạnh ở orchestration, nhưng có mặt trái.
 
-- **macOS-first.** Scheduling dùng `launchd` (native macOS). Linux dùng systemd
-  (chưa wrap), Windows chưa hỗ trợ. Phần relay core (multi-session/topic/group)
-  vẫn chạy đa nền tảng; chỉ phần scheduling gắn macOS.
-- **Phụ thuộc ccc.** Relay engine là ccc (binary). Repo này không reimplement
-  relay — nó orchestrate ccc. (Đây cũng là điểm mạnh: kế thừa một engine ổn định.)
-- **Headless server / máy luôn bật** là thiết kế lý tưởng. Máy sleep thường
-  xuyên → nên để trên một mini/Mac luôn-on hoặc VPS chạy ccc.
+macOS-first. Scheduling dùng `launchd` (native macOS). Linux dùng systemd (chưa
+wrap), Windows chưa hỗ trợ. Phần relay core (multi-session, topic, group) vẫn
+chạy đa nền tảng, chỉ phần scheduling gắn macOS.
 
-Chi tiết kiến trúc multi-session: [03-multi-session-architecture.md](./03-multi-session-architecture.md).
+Phụ thuộc ccc. Relay engine là ccc (binary). Repo này không reimplement relay,
+nó orchestrate ccc. Đây vừa là điểm yếu (phụ thuộc), vừa là điểm mạnh (kế thừa
+một engine ổn định).
+
+Lý tưởng nhất cho máy luôn-on hoặc headless server. Máy hay sleep thì nên để
+trên một mini/Mac always-on, hoặc VPS chạy ccc.
+
+Chi tiết kiến trúc: [03-multi-session-architecture.md](./03-multi-session-architecture.md).
