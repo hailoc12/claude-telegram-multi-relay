@@ -1,0 +1,25 @@
+{
+  "_comment": "This is the SCHEMA for ccc's own config (~/.config/ccc/config.json), NOT something this repo writes. Shown here so you understand the multi-session/multi-group data model this orchestrator reads. bot_token & group_id are set by `ccc setup <token>`. The `sessions` map is what THIS repo's orchestrator reads to route messages.",
+  "_set_with": "ccc setup <BOT_TOKEN>   then   ccc setgroup   (for forum topics)",
+
+  "bot_token": "123456:ABC-DEF_your_bot_token_from_BotFather",
+  "chat_id": 1056409627,
+  "group_id": -1003460044206,
+
+  "sessions": {
+    "session-a": {
+      "topic_id": 785,
+      "path": "/absolute/path/to/project-a",
+      "window_id": "@19",
+      "group_id": -1003460044206,
+      "_note_group_id": "OPTIONAL per-session group. If absent, falls back to top-level group_id. This is what enables 1 bot -> N groups (multi-user)."
+    },
+    "session-b": {
+      "topic_id": 123,
+      "path": "/absolute/path/to/project-b",
+      "window_id": "@20",
+      "group_id": -1000000000000,
+      "_note": "Different group_id => this session lives in a DIFFERENT Telegram group."
+    }
+  }
+}

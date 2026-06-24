@@ -1,0 +1,22 @@
+# Secrets — NEVER commit real tokens or configs with live tokens
+config/ccc-config.json
+config/relay.env
+*.env
+!config/relay.example.env
+
+# Runtime registries & logs (generated at runtime)
+registry.json
+schedules.json
+logs/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Editors
+.vscode/
+.idea/
+*.swp
